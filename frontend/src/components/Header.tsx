@@ -79,14 +79,14 @@ const Header: React.FC<HeaderProps> = ({ onSearch, onContactClick }) => {
             <div className="relative">
               <img 
                 src="/erotic_2267572.png" 
-                alt="The Pleasure Vault Logo" 
+                alt="Midnight Queens Logo" 
                 className="w-12 h-12 group-hover:scale-110 transition-transform duration-300"
               />
               <Star className="w-4 h-4 text-rose-400 absolute -top-1 -right-1" />
             </div>
             <div>
               <h1 className="text-2xl font-bold bg-gradient-to-r from-gold-400 to-rose-400 bg-clip-text text-transparent">
-                The Pleasure Vault
+                Midnight Queens
               </h1>
               <p className="text-xs text-gray-400">Premium Service • 18+ Only</p>
             </div>

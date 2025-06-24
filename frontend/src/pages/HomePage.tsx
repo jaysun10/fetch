@@ -90,7 +90,7 @@ const HomePage = () => {
     },
     {
       heading: "A New Position. A New Girl. Every Night.",
-      description: "Your fantasy playground starts here. Welcome to The Pleasure Vault.",
+      description: "Your fantasy playground starts here. Welcome to Midnight Queens.",
       iconImage: "/sex_9981788.png"
     }
   ];
@@ -136,11 +136,11 @@ const HomePage = () => {
         setWebsiteSettings({
           contactInfo: {
             whatsapp: "+1234567890",
-            telegram: "@thepleasurevault",
+            telegram: "@midnightqueens",
             phone: "+1234567890"
           },
           businessInfo: {
-            name: "The Pleasure Vault",
+            name: "Midnight Queens",
             tagline: "Premium Adult Services",
             description: "We provide sophisticated companionship services with the highest standards of professionalism, discretion, and elegance."
           }

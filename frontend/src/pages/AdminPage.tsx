@@ -87,11 +87,11 @@ const AdminPage = () => {
       setWebsiteSettings({
         contactInfo: {
           whatsapp: "+1234567890",
-          telegram: "@thepleasurevault",
+          telegram: "@midnightqueens",
           phone: "+1234567890"
         },
         businessInfo: {
-          name: "The Pleasure Vault",
+          name: "Midnight Queens",
           tagline: "Premium Adult Services",
           description: "We provide sophisticated companionship services with the highest standards of professionalism, discretion, and elegance."
         }
@@ -281,7 +281,7 @@ const AdminPage = () => {
                 <span>Go to Home</span>
               </Link>
               <h1 className="text-3xl font-bold bg-gradient-to-r from-gold-400 to-rose-400 bg-clip-text text-transparent">
-                The Pleasure Vault - Admin Panel
+                Midnight Queens - Admin Panel
               </h1>
             </div>
           </div>
