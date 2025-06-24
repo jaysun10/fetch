@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ProfileCard from '../components/ProfileCard';
 import Header from '../components/Header';
 import { Star, Sparkles, MessageCircle, Send, Phone } from 'lucide-react';
@@ -39,6 +39,7 @@ const HomePage = () => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentSlide, setCurrentSlide] = useState(0);
+  const contactSectionRef = useRef<HTMLDivElement>(null);
 
   const slideContent: SlideContent[] = [
     {
@@ -211,10 +212,17 @@ const HomePage = () => {
     }
   };
 
+  const scrollToContact = () => {
+    contactSectionRef.current?.scrollIntoView({ 
+      behavior: 'smooth',
+      block: 'start'
+    });
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white">
-        <Header onSearch={handleSearch} />
+        <Header onSearch={handleSearch} onContactClick={scrollToContact} />
         <div className="flex items-center justify-center min-h-[60vh]">
           <div className="text-center">
             <div className="w-16 h-16 border-4 border-gold-500/30 border-t-gold-500 rounded-full animate-spin mx-auto mb-4"></div>
@@ -227,7 +235,7 @@ const HomePage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white">
-      <Header onSearch={handleSearch} />
+      <Header onSearch={handleSearch} onContactClick={scrollToContact} />
       <main className="container mx-auto px-4 py-8">
         <div className="space-y-8">
           {/* Hero Slideshow Section with Position Icons */}
@@ -254,13 +262,13 @@ const HomePage = () => {
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center h-full">
                       {/* Text Content */}
                       <div className="space-y-6">
-                        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight drop-shadow-2xl">
+                        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight drop-shadow-2xl">
                           <span className="bg-gradient-to-r from-gold-400 via-rose-400 to-purple-400 bg-clip-text text-transparent italic font-serif">
                             {slide.heading}
                           </span>
                         </h1>
                         
-                        <p className="text-lg md:text-xl lg:text-2xl text-gray-200 leading-relaxed italic font-serif drop-shadow-lg">
+                        <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-200 leading-relaxed italic font-serif drop-shadow-lg">
                           {slide.description}
                         </p>
                       </div>
@@ -269,11 +277,11 @@ const HomePage = () => {
                       <div className="flex items-center justify-center">
                         <div className="relative">
                           <div className="absolute inset-0 bg-gradient-to-r from-gold-400/20 to-rose-400/20 rounded-full blur-3xl scale-150"></div>
-                          <div className="relative bg-gradient-to-br from-gold-500/10 to-rose-500/10 backdrop-blur-sm rounded-3xl p-8 border border-gold-500/20">
+                          <div className="relative bg-gradient-to-br from-gold-500/10 to-rose-500/10 backdrop-blur-sm rounded-3xl p-6 sm:p-8 border border-gold-500/20">
                             <img
                               src={slide.iconImage}
                               alt="Position illustration"
-                              className="w-48 h-48 md:w-64 md:h-64 object-contain filter brightness-0 invert opacity-80"
+                              className="w-32 h-32 sm:w-48 sm:h-48 md:w-64 md:h-64 object-contain filter brightness-0 invert opacity-80"
                               style={{
                                 filter: 'brightness(0) saturate(100%) invert(85%) sepia(58%) saturate(2476%) hue-rotate(315deg) brightness(106%) contrast(97%)'
                               }}
@@ -302,21 +310,21 @@ const HomePage = () => {
               ))}
             </div>
             
-            {/* Premium features */}
-            <div className="flex items-center justify-center space-x-6 text-gold-400 mt-8 relative z-10">
-              <div className="flex items-center space-x-2 bg-black/30 backdrop-blur-sm rounded-full px-4 py-2">
-                <Star className="w-5 h-5 fill-current" />
-                <span className="font-medium italic">Premium Quality</span>
+            {/* Premium features - Made Responsive */}
+            <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6 text-gold-400 mt-8 relative z-10">
+              <div className="flex items-center space-x-2 bg-black/30 backdrop-blur-sm rounded-full px-3 sm:px-4 py-2">
+                <Star className="w-4 sm:w-5 h-4 sm:h-5 fill-current" />
+                <span className="font-medium italic text-sm sm:text-base">Premium Quality</span>
               </div>
-              <div className="w-1 h-1 bg-gold-400 rounded-full"></div>
-              <div className="flex items-center space-x-2 bg-black/30 backdrop-blur-sm rounded-full px-4 py-2">
-                <Star className="w-5 h-5 fill-current" />
-                <span className="font-medium italic">Absolute Discretion</span>
+              <div className="hidden sm:block w-1 h-1 bg-gold-400 rounded-full"></div>
+              <div className="flex items-center space-x-2 bg-black/30 backdrop-blur-sm rounded-full px-3 sm:px-4 py-2">
+                <Star className="w-4 sm:w-5 h-4 sm:h-5 fill-current" />
+                <span className="font-medium italic text-sm sm:text-base">Absolute Discretion</span>
               </div>
-              <div className="w-1 h-1 bg-gold-400 rounded-full"></div>
-              <div className="flex items-center space-x-2 bg-black/30 backdrop-blur-sm rounded-full px-4 py-2">
-                <Star className="w-5 h-5 fill-current" />
-                <span className="font-medium italic">Available 24/7</span>
+              <div className="hidden sm:block w-1 h-1 bg-gold-400 rounded-full"></div>
+              <div className="flex items-center space-x-2 bg-black/30 backdrop-blur-sm rounded-full px-3 sm:px-4 py-2">
+                <Star className="w-4 sm:w-5 h-4 sm:h-5 fill-current" />
+                <span className="font-medium italic text-sm sm:text-base">Available 24/7</span>
               </div>
             </div>
           </div>
@@ -348,8 +356,11 @@ const HomePage = () => {
             </div>
           )}
 
-          {/* Call to Action */}
-          <div className="text-center py-12 bg-gradient-to-r from-gold-500/10 to-rose-500/10 rounded-2xl border border-gold-500/20 mt-12">
+          {/* Call to Action - Contact Section */}
+          <div 
+            ref={contactSectionRef}
+            className="text-center py-12 bg-gradient-to-r from-gold-500/10 to-rose-500/10 rounded-2xl border border-gold-500/20 mt-12"
+          >
             <h2 className="text-3xl font-bold text-white mb-4 italic font-serif">
               Ready for an Exceptional Experience?
             </h2>

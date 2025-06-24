@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { profiles } from './data/profiles.js';
+import { getProfiles, getProfileById, addProfile, updateProfile, deleteProfile } from './data/profiles.js';
 import { websiteSettings } from './data/websiteSettings.js';
 
 const app = express();
@@ -11,63 +11,87 @@ app.use(express.json());
 
 // Get all profiles
 app.get('/api/profiles', (req, res) => {
-  res.json(profiles);
+  try {
+    const profiles = getProfiles();
+    res.json(profiles);
+  } catch (error) {
+    console.error('Error fetching profiles:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
 // Get single profile by id
 app.get('/api/profiles/:id', (req, res) => {
-  const profile = profiles.find(p => p.id === parseInt(req.params.id));
-  if (!profile) {
-    return res.status(404).json({ error: 'Profile not found' });
+  try {
+    const profile = getProfileById(req.params.id);
+    if (!profile) {
+      return res.status(404).json({ error: 'Profile not found' });
+    }
+    res.json(profile);
+  } catch (error) {
+    console.error('Error fetching profile:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
-  res.json(profile);
 });
 
 // Add new profile
 app.post('/api/profiles', (req, res) => {
-  const newProfile = {
-    id: Math.max(...profiles.map(p => p.id)) + 1,
-    ...req.body
-  };
-  profiles.push(newProfile);
-  res.status(201).json(newProfile);
+  try {
+    const newProfile = addProfile(req.body);
+    res.status(201).json(newProfile);
+  } catch (error) {
+    console.error('Error creating profile:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
 // Update profile
 app.put('/api/profiles/:id', (req, res) => {
-  const id = parseInt(req.params.id);
-  const profileIndex = profiles.findIndex(p => p.id === id);
-  
-  if (profileIndex === -1) {
-    return res.status(404).json({ error: 'Profile not found' });
+  try {
+    const updatedProfile = updateProfile(req.params.id, req.body);
+    if (!updatedProfile) {
+      return res.status(404).json({ error: 'Profile not found' });
+    }
+    res.json(updatedProfile);
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
-  
-  profiles[profileIndex] = { ...profiles[profileIndex], ...req.body };
-  res.json(profiles[profileIndex]);
 });
 
 // Delete profile
 app.delete('/api/profiles/:id', (req, res) => {
-  const id = parseInt(req.params.id);
-  const profileIndex = profiles.findIndex(p => p.id === id);
-  
-  if (profileIndex === -1) {
-    return res.status(404).json({ error: 'Profile not found' });
+  try {
+    const deletedProfile = deleteProfile(req.params.id);
+    if (!deletedProfile) {
+      return res.status(404).json({ error: 'Profile not found' });
+    }
+    res.json({ message: 'Profile deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting profile:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
-  
-  profiles.splice(profileIndex, 1);
-  res.json({ message: 'Profile deleted successfully' });
 });
 
 // Get website settings
 app.get('/api/website-settings', (req, res) => {
-  res.json(websiteSettings);
+  try {
+    res.json(websiteSettings);
+  } catch (error) {
+    console.error('Error fetching website settings:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
 // Update website settings
 app.put('/api/website-settings', (req, res) => {
-  Object.assign(websiteSettings, req.body);
-  res.json(websiteSettings);
+  try {
+    Object.assign(websiteSettings, req.body);
+    res.json(websiteSettings);
+  } catch (error) {
+    console.error('Error updating website settings:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
 app.listen(PORT, () => {

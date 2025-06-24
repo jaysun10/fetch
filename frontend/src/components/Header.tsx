@@ -1,14 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Star, Search } from 'lucide-react';
 
 interface HeaderProps {
   onSearch?: (query: string) => void;
+  onContactClick?: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ onSearch }) => {
+const Header: React.FC<HeaderProps> = ({ onSearch, onContactClick }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const navigate = useNavigate();
+
+  // Hide/show navbar on scroll
+  useEffect(() => {
+    const controlNavbar = () => {
+      if (typeof window !== 'undefined') {
+        if (window.scrollY > lastScrollY && window.scrollY > 100) {
+          // Scrolling down and past 100px
+          setIsVisible(false);
+        } else {
+          // Scrolling up
+          setIsVisible(true);
+        }
+        setLastScrollY(window.scrollY);
+      }
+    };
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('scroll', controlNavbar);
+      return () => {
+        window.removeEventListener('scroll', controlNavbar);
+      };
+    }
+  }, [lastScrollY]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
@@ -35,8 +61,18 @@ const Header: React.FC<HeaderProps> = ({ onSearch }) => {
     }
   };
 
+  const handleContactClick = () => {
+    if (onContactClick) {
+      onContactClick();
+    }
+  };
+
   return (
-    <header className="bg-black/50 backdrop-blur-md border-b border-gold-500/20 sticky top-0 z-50">
+    <header 
+      className={`bg-black/50 backdrop-blur-md border-b border-gold-500/20 sticky top-0 z-50 transition-transform duration-300 ${
+        isVisible ? 'translate-y-0' : '-translate-y-full'
+      }`}
+    >
       <nav className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center space-x-3 group">
@@ -75,12 +111,16 @@ const Header: React.FC<HeaderProps> = ({ onSearch }) => {
               </div>
             </form>
             
-            <div className="px-4 py-2 bg-gradient-to-r from-gold-500 to-rose-500 rounded-full text-black font-medium text-sm">
+            {/* Available 24/7 Button */}
+            <button
+              onClick={handleContactClick}
+              className="px-4 py-2 bg-gradient-to-r from-gold-500 to-rose-500 rounded-full text-black font-medium text-sm hover:shadow-lg hover:shadow-gold-500/25 transition-all cursor-pointer"
+            >
               Available 24/7
-            </div>
+            </button>
           </div>
           
-          {/* Mobile Search */}
+          {/* Mobile Search and Contact */}
           <div className="md:hidden flex items-center space-x-3">
             <form onSubmit={handleSearchSubmit} className="relative">
               <div className="relative">
@@ -90,10 +130,17 @@ const Header: React.FC<HeaderProps> = ({ onSearch }) => {
                   value={searchQuery}
                   onChange={handleSearchChange}
                   placeholder="Search..."
-                  className="pl-10 pr-4 py-2 bg-gray-800/50 border border-gray-600/50 rounded-full text-white placeholder-gray-400 focus:border-gold-500/50 focus:outline-none focus:ring-2 focus:ring-gold-500/20 transition-all w-40"
+                  className="pl-10 pr-4 py-2 bg-gray-800/50 border border-gray-600/50 rounded-full text-white placeholder-gray-400 focus:border-gold-500/50 focus:outline-none focus:ring-2 focus:ring-gold-500/20 transition-all w-32"
                 />
               </div>
             </form>
+            
+            <button
+              onClick={handleContactClick}
+              className="px-3 py-2 bg-gradient-to-r from-gold-500 to-rose-500 rounded-full text-black font-medium text-xs hover:shadow-lg hover:shadow-gold-500/25 transition-all cursor-pointer"
+            >
+              24/7
+            </button>
           </div>
         </div>
       </nav>

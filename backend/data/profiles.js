@@ -1,4 +1,6 @@
-export const profiles = [
+// This file will be used as the persistent data store
+// In a production environment, you would use a proper database
+let profiles = [
   {
     id: 1,
     name: "Sophia",
@@ -126,3 +128,40 @@ export const profiles = [
     }
   }
 ];
+
+// Helper functions to manage profiles
+export const getProfiles = () => profiles;
+
+export const getProfileById = (id) => profiles.find(p => p.id === parseInt(id));
+
+export const addProfile = (profileData) => {
+  const newId = Math.max(...profiles.map(p => p.id), 0) + 1;
+  const newProfile = {
+    id: newId,
+    ...profileData
+  };
+  profiles.push(newProfile);
+  return newProfile;
+};
+
+export const updateProfile = (id, profileData) => {
+  const index = profiles.findIndex(p => p.id === parseInt(id));
+  if (index !== -1) {
+    profiles[index] = { ...profiles[index], ...profileData };
+    return profiles[index];
+  }
+  return null;
+};
+
+export const deleteProfile = (id) => {
+  const index = profiles.findIndex(p => p.id === parseInt(id));
+  if (index !== -1) {
+    const deletedProfile = profiles[index];
+    profiles.splice(index, 1);
+    return deletedProfile;
+  }
+  return null;
+};
+
+// Export the profiles array as default for backward compatibility
+export { profiles };
