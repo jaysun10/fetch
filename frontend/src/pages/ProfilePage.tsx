@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Star, MapPin, Clock, Phone, MessageCircle, Send, Heart, ChevronLeft, ChevronRight } from 'lucide-react';
 import Header from '../components/Header';
+import { API_ENDPOINTS, apiRequest } from '../config/api';
 
 interface Profile {
   id: number;
@@ -32,67 +33,62 @@ const ProfilePage = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/api/profiles/${id}`);
-        if (response.ok) {
-          const data = await response.json();
-          setProfile(data);
-        } else {
-          // Fallback data if server is not available
-          const fallbackProfiles = [
-            {
-              id: 1,
-              name: "Sophia",
-              age: 24,
-              shortDescription: "Elegant and sophisticated companion with a warm personality",
-              fullDescription: "Sophia is an intelligent and charming companion who brings elegance to every encounter. With her warm smile and engaging conversation, she creates memorable experiences. She enjoys fine dining, cultural events, and meaningful connections. Available for dinner dates, social events, and sophisticated companionship.",
-              profilePhoto: "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=400",
-              additionalPhotos: [
-                "https://images.pexels.com/photos/1858175/pexels-photo-1858175.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/1542085/pexels-photo-1542085.jpeg?auto=compress&cs=tinysrgb&w=600"
-              ],
-              services: ["Dinner Dates", "Social Events", "Travel Companion"],
-              location: "Manhattan",
-              availability: "By Appointment",
-              isPremium: true,
-              contactInfo: {
-                whatsapp: "+1234567890",
-                telegram: "@sophia_companion",
-                phone: "+1234567890"
-              }
-            },
-            {
-              id: 2,
-              name: "Isabella",
-              age: 26,
-              shortDescription: "Vivacious and adventurous with an infectious energy",
-              fullDescription: "Isabella brings excitement and joy to every moment. Her adventurous spirit and vibrant personality make her the perfect companion for those seeking memorable experiences. She loves exploring the city, trying new restaurants, and engaging in stimulating conversations. Her warm and friendly nature puts everyone at ease.",
-              profilePhoto: "https://images.pexels.com/photos/1391498/pexels-photo-1391498.jpeg?auto=compress&cs=tinysrgb&w=400",
-              additionalPhotos: [
-                "https://images.pexels.com/photos/1484794/pexels-photo-1484794.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/1462980/pexels-photo-1462980.jpeg?auto=compress&cs=tinysrgb&w=600"
-              ],
-              services: ["City Tours", "Entertainment Events", "Casual Dining"],
-              location: "Brooklyn",
-              availability: "Flexible Schedule",
-              isPremium: false,
-              contactInfo: {
-                whatsapp: "+1234567891",
-                telegram: "@isabella_fun",
-                phone: "+1234567891"
-              }
-            }
-          ];
-          
-          const foundProfile = fallbackProfiles.find(p => p.id === parseInt(id || '0'));
-          if (foundProfile) {
-            setProfile(foundProfile);
-          } else {
-            navigate('/');
-          }
-        }
+        const data = await apiRequest(`${API_ENDPOINTS.PROFILES}/${id}`);
+        setProfile(data);
       } catch (error) {
         console.error('Error fetching profile:', error);
-        navigate('/');
+        // Fallback data if server is not available
+        const fallbackProfiles = [
+          {
+            id: 1,
+            name: "Sophia",
+            age: 24,
+            shortDescription: "Elegant and sophisticated companion with a warm personality",
+            fullDescription: "Sophia is an intelligent and charming companion who brings elegance to every encounter. With her warm smile and engaging conversation, she creates memorable experiences. She enjoys fine dining, cultural events, and meaningful connections. Available for dinner dates, social events, and sophisticated companionship.",
+            profilePhoto: "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=400",
+            additionalPhotos: [
+              "https://images.pexels.com/photos/1858175/pexels-photo-1858175.jpeg?auto=compress&cs=tinysrgb&w=600",
+              "https://images.pexels.com/photos/1542085/pexels-photo-1542085.jpeg?auto=compress&cs=tinysrgb&w=600"
+            ],
+            services: ["Dinner Dates", "Social Events", "Travel Companion"],
+            location: "Manhattan",
+            availability: "By Appointment",
+            isPremium: true,
+            contactInfo: {
+              whatsapp: "+1234567890",
+              telegram: "@sophia_companion",
+              phone: "+1234567890"
+            }
+          },
+          {
+            id: 2,
+            name: "Isabella",
+            age: 26,
+            shortDescription: "Vivacious and adventurous with an infectious energy",
+            fullDescription: "Isabella brings excitement and joy to every moment. Her adventurous spirit and vibrant personality make her the perfect companion for those seeking memorable experiences. She loves exploring the city, trying new restaurants, and engaging in stimulating conversations. Her warm and friendly nature puts everyone at ease.",
+            profilePhoto: "https://images.pexels.com/photos/1391498/pexels-photo-1391498.jpeg?auto=compress&cs=tinysrgb&w=400",
+            additionalPhotos: [
+              "https://images.pexels.com/photos/1484794/pexels-photo-1484794.jpeg?auto=compress&cs=tinysrgb&w=600",
+              "https://images.pexels.com/photos/1462980/pexels-photo-1462980.jpeg?auto=compress&cs=tinysrgb&w=600"
+            ],
+            services: ["City Tours", "Entertainment Events", "Casual Dining"],
+            location: "Brooklyn",
+            availability: "Flexible Schedule",
+            isPremium: false,
+            contactInfo: {
+              whatsapp: "+1234567891",
+              telegram: "@isabella_fun",
+              phone: "+1234567891"
+            }
+          }
+        ];
+        
+        const foundProfile = fallbackProfiles.find(p => p.id === parseInt(id || '0'));
+        if (foundProfile) {
+          setProfile(foundProfile);
+        } else {
+          navigate('/');
+        }
       } finally {
         setLoading(false);
       }

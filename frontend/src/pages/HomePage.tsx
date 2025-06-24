@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import ProfileCard from '../components/ProfileCard';
 import Header from '../components/Header';
 import { Star, Sparkles, MessageCircle, Send, Phone } from 'lucide-react';
+import { API_ENDPOINTS, apiRequest } from '../config/api';
 
 interface Profile {
   id: number;
@@ -98,19 +99,13 @@ const HomePage = () => {
     const fetchData = async () => {
       try {
         // Fetch profiles
-        const profilesResponse = await fetch('http://localhost:3001/api/profiles');
-        if (profilesResponse.ok) {
-          const profilesData = await profilesResponse.json();
-          setProfiles(profilesData);
-          setFilteredProfiles(profilesData);
-        }
+        const profilesData = await apiRequest(API_ENDPOINTS.PROFILES);
+        setProfiles(profilesData);
+        setFilteredProfiles(profilesData);
 
         // Fetch website settings
-        const settingsResponse = await fetch('http://localhost:3001/api/website-settings');
-        if (settingsResponse.ok) {
-          const settingsData = await settingsResponse.json();
-          setWebsiteSettings(settingsData);
-        }
+        const settingsData = await apiRequest(API_ENDPOINTS.WEBSITE_SETTINGS);
+        setWebsiteSettings(settingsData);
       } catch (error) {
         console.error('Error fetching data:', error);
         // Fallback data if server is not available

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Phone, MessageCircle, Send, Clock, Shield, Heart } from 'lucide-react';
+import { API_ENDPOINTS, apiRequest } from '../config/api';
 
 interface WebsiteSettings {
   contactInfo: {
@@ -20,11 +21,8 @@ const Footer = () => {
   useEffect(() => {
     const fetchWebsiteSettings = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/website-settings');
-        if (response.ok) {
-          const data = await response.json();
-          setWebsiteSettings(data);
-        }
+        const data = await apiRequest(API_ENDPOINTS.WEBSITE_SETTINGS);
+        setWebsiteSettings(data);
       } catch (error) {
         console.error('Error fetching website settings:', error);
         // Fallback settings

@@ -1,13 +1,34 @@
 import express from 'express';
 import cors from 'cors';
+import dotenv from 'dotenv';
 import { getProfiles, getProfileById, addProfile, updateProfile, deleteProfile } from './data/profiles.js';
 import { websiteSettings } from './data/websiteSettings.js';
 
-const app = express();
-const PORT = 3001;
+// Load environment variables
+dotenv.config();
 
-app.use(cors());
+const app = express();
+const PORT = process.env.PORT || 3001;
+const CORS_ORIGIN = process.env.CORS_ORIGIN || 'http://localhost:5173';
+
+// CORS configuration
+app.use(cors({
+  origin: CORS_ORIGIN,
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(express.json());
+
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.json({ 
+    status: 'OK', 
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
 
 // Get all profiles
 app.get('/api/profiles', (req, res) => {
@@ -94,6 +115,19 @@ app.put('/api/website-settings', (req, res) => {
   }
 });
 
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: 'Something went wrong!' });
+});
+
+// 404 handler
+app.use('*', (req, res) => {
+  res.status(404).json({ error: 'Route not found' });
+});
+
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.log(`📡 CORS enabled for: ${CORS_ORIGIN}`);
+  console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
 });

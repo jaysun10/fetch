@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, Save, X, Upload, Home, Star, Phone, MessageCircle, Send, Settings, Globe } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { API_ENDPOINTS, apiRequest } from '../config/api';
 
 interface Profile {
   id: number;
@@ -67,11 +68,8 @@ const AdminPage = () => {
 
   const fetchProfiles = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/profiles');
-      if (response.ok) {
-        const data = await response.json();
-        setProfiles(data);
-      }
+      const data = await apiRequest(API_ENDPOINTS.PROFILES);
+      setProfiles(data);
     } catch (error) {
       console.error('Error fetching profiles:', error);
     } finally {
@@ -81,11 +79,8 @@ const AdminPage = () => {
 
   const fetchWebsiteSettings = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/website-settings');
-      if (response.ok) {
-        const data = await response.json();
-        setWebsiteSettings(data);
-      }
+      const data = await apiRequest(API_ENDPOINTS.WEBSITE_SETTINGS);
+      setWebsiteSettings(data);
     } catch (error) {
       console.error('Error fetching website settings:', error);
       // Fallback settings
@@ -190,23 +185,18 @@ const AdminPage = () => {
 
     try {
       const url = editingProfile 
-        ? `http://localhost:3001/api/profiles/${editingProfile.id}`
-        : 'http://localhost:3001/api/profiles';
+        ? `${API_ENDPOINTS.PROFILES}/${editingProfile.id}`
+        : API_ENDPOINTS.PROFILES;
       
       const method = editingProfile ? 'PUT' : 'POST';
       
-      const response = await fetch(url, {
+      await apiRequest(url, {
         method,
-        headers: {
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify(profileData),
       });
 
-      if (response.ok) {
-        fetchProfiles();
-        resetForm();
-      }
+      fetchProfiles();
+      resetForm();
     } catch (error) {
       console.error('Error saving profile:', error);
     }
@@ -216,18 +206,13 @@ const AdminPage = () => {
     e.preventDefault();
     
     try {
-      const response = await fetch('http://localhost:3001/api/website-settings', {
+      await apiRequest(API_ENDPOINTS.WEBSITE_SETTINGS, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify(websiteSettings),
       });
 
-      if (response.ok) {
-        setShowWebsiteSettings(false);
-        alert('Website settings updated successfully!');
-      }
+      setShowWebsiteSettings(false);
+      alert('Website settings updated successfully!');
     } catch (error) {
       console.error('Error updating website settings:', error);
     }
@@ -258,13 +243,11 @@ const AdminPage = () => {
   const handleDelete = async (id: number) => {
     if (window.confirm('Are you sure you want to delete this profile?')) {
       try {
-        const response = await fetch(`http://localhost:3001/api/profiles/${id}`, {
+        await apiRequest(`${API_ENDPOINTS.PROFILES}/${id}`, {
           method: 'DELETE',
         });
         
-        if (response.ok) {
-          fetchProfiles();
-        }
+        fetchProfiles();
       } catch (error) {
         console.error('Error deleting profile:', error);
       }
