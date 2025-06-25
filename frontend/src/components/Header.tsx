@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Star, Search } from 'lucide-react';
+import { APP_CONFIG } from '../config/api';
 
 interface HeaderProps {
   onSearch?: (query: string) => void;
@@ -86,7 +87,7 @@ const Header: React.FC<HeaderProps> = ({ onSearch, onContactClick }) => {
             </div>
             <div>
               <h1 className="text-2xl font-bold bg-gradient-to-r from-gold-400 to-rose-400 bg-clip-text text-transparent">
-                Midnight Queens
+                {APP_CONFIG.NAME}
               </h1>
               <p className="text-xs text-gray-400">Premium Service • 18+ Only</p>
             </div>

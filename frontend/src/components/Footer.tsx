@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Phone, MessageCircle, Send, Clock, Shield, Heart } from 'lucide-react';
-import { API_ENDPOINTS, apiRequest } from '../config/api';
+import { API_ENDPOINTS, apiRequest, APP_CONFIG } from '../config/api';
 
 interface WebsiteSettings {
   contactInfo: {
@@ -25,16 +25,16 @@ const Footer = () => {
         setWebsiteSettings(data);
       } catch (error) {
         console.error('Error fetching website settings:', error);
-        // Fallback settings
+        // Fallback settings from environment variables
         setWebsiteSettings({
           contactInfo: {
-            whatsapp: "+1234567890",
-            telegram: "@midnightqueens",
-            phone: "+1234567890"
+            whatsapp: APP_CONFIG.CONTACT.WHATSAPP,
+            telegram: APP_CONFIG.CONTACT.TELEGRAM,
+            phone: APP_CONFIG.CONTACT.PHONE
           },
           businessInfo: {
-            name: "Midnight Queens",
-            tagline: "Premium Adult Services",
+            name: APP_CONFIG.NAME,
+            tagline: APP_CONFIG.TAGLINE,
             description: "We provide sophisticated companionship services with the highest standards of professionalism, discretion, and elegance."
           }
         });

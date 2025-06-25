@@ -1,11 +1,15 @@
 import express from 'express';
 import cors from 'cors';
+import dotenv from 'dotenv';
 import { getProfiles, getProfileById, addProfile, updateProfile, deleteProfile } from './data/profiles.js';
 import { websiteSettings } from './data/websiteSettings.js';
 
+// Load environment variables
+dotenv.config();
+
 const app = express();
-const PORT = 3001;
-const CORS_ORIGIN = 'http://localhost:5173';
+const PORT = process.env.PORT || 3001;
+const CORS_ORIGIN = process.env.CORS_ORIGIN || 'http://localhost:5173';
 
 // CORS configuration
 app.use(cors({
@@ -22,7 +26,7 @@ app.get('/api/health', (req, res) => {
   res.json({ 
     status: 'OK', 
     timestamp: new Date().toISOString(),
-    environment: 'development'
+    environment: process.env.NODE_ENV || 'development'
   });
 });
 
@@ -125,5 +129,5 @@ app.use('*', (req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
   console.log(`📡 CORS enabled for: ${CORS_ORIGIN}`);
-  console.log(`🌍 Environment: development`);
+  console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
 });

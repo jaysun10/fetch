@@ -1,5 +1,5 @@
-// API Configuration
-const API_BASE_URL = 'http://localhost:3001';
+// API Configuration using environment variables
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
 export const API_ENDPOINTS = {
   PROFILES: `${API_BASE_URL}/api/profiles`,
@@ -7,12 +7,12 @@ export const API_ENDPOINTS = {
 } as const;
 
 export const APP_CONFIG = {
-  NAME: 'Midnight Queens',
-  TAGLINE: 'Premium Adult Services',
+  NAME: import.meta.env.VITE_APP_NAME || 'Midnight Queens',
+  TAGLINE: import.meta.env.VITE_APP_TAGLINE || 'Premium Adult Services',
   CONTACT: {
-    WHATSAPP: '+1234567890',
-    TELEGRAM: '@midnightqueens',
-    PHONE: '+1234567890',
+    WHATSAPP: import.meta.env.VITE_CONTACT_WHATSAPP || '+1234567890',
+    TELEGRAM: import.meta.env.VITE_CONTACT_TELEGRAM || '@midnightqueens',
+    PHONE: import.meta.env.VITE_CONTACT_PHONE || '+1234567890',
   }
 } as const;
 
